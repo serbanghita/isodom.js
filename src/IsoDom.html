@@ -15,13 +15,17 @@
 <script src="IsoDom.js" type="application/javascript"></script>
 <script type="application/javascript">
     let dragging = null;
+    let draggingOrientation = null;
 
     document.body.onkeydown = function (e) {
         // ESC
        if (e.keyCode === 27 && dragging) {
            // Cancel drag and drop
-           dragging.update();
+           dragging.item.orientation = draggingOrientation;
+           dragging.item.update(); // restore orientation
+           dragging.update(); // restore z-index
            dragging = null;
+           draggingOrientation = null;
        }
     };
 
@@ -50,11 +54,13 @@
                 if (!dragging) {
                     if (cell.item) {
                         dragging = cell.getRootCell();
+                        draggingOrientation = cell.item.orientation;
                         dragging.item.el.style.zIndex = '99999';
                     }
                 } else {
                     iso.moveItem(dragging.item, cell.x, cell.y);
                     dragging = null;
+                    draggingOrientation = null;
                     iso.draw();
                 }
             };
