@@ -180,6 +180,20 @@ class IsoDomItem {
         this.el.style.top = `${position.top}px`;
         this.el.style.left = `${position.left}px`;
     }
+
+    /**
+     * Mount item to DOM.
+     */
+    mount() {
+        this.iso.mountItem(this);
+    }
+
+    /**
+     * Remove item from DOM.
+     */
+    unmount() {
+        this.iso.unmountItem(this);
+    }
 }
 
 class IsoDom {
@@ -261,7 +275,7 @@ class IsoDom {
         this.assertItemPlacement(item, x, y, false);
         const cell = this.cell(x, y);
 
-        this._mountItem(item);
+        this.mountItem(item);
         this._mapItemToCells(item, cell);
     }
 
@@ -481,10 +495,9 @@ class IsoDom {
     /**
      * Mount item into DOM.
      * @param {IsoDomItem} item
-     * @private
      * @returns {IsoDomItem}
      */
-    _mountItem(item) {
+    mountItem(item) {
         if (item.el) {
             return item;
         }
@@ -495,6 +508,18 @@ class IsoDom {
         item.setElement(node);
 
         return item;
+    }
+
+    /**
+     * Remove item from DOM.
+     * @param {IsoDomItem} item
+     */
+    unmountItem(item) {
+        if (!item.el) {
+            return;
+        }
+
+        item.el.parentNode.removeChild(item.el);
     }
 
     /**
